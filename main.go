@@ -6,16 +6,36 @@
 //
 // go-aws-s3-bucket-list
 //
-
 package main
 
 import (
 	"fmt"
 	"os"
 
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
 )
+
+const _appVersion = "v0.0.1"
+
+//
+// go run . mybucket
+//
+
+/*
+// bucket policy to allow AIM user to list bucket content
+{
+	"Sid": "*",
+	"Effect": "Allow",
+	"Principal": {
+		"AWS": "arn:aws:iam::594...221:user/john"
+	},
+	"Action": "s3:ListBucket",
+	"Resource": "arn:aws:s3:::mybucket"
+},
+*/
 
 // Lists all objects in a bucket using pagination
 //
@@ -27,7 +47,20 @@ func main() {
 		return
 	}
 
-	sess := session.Must(session.NewSession())
+	c := &aws.Config{
+		// Either hard-code the region or use AWS_REGION.
+		// Region: aws.String("us-east-2"),
+		// Region: aws.String("us-west-2"), // Oregon
+
+		// credentials.NewEnvCredentials assumes two environment variables are
+		// present:
+		// 1. AWS_ACCESS_KEY_ID, and
+		// 2. AWS_SECRET_ACCESS_KEY.
+		Credentials: credentials.NewEnvCredentials(),
+	}
+
+	// sess := session.Must(session.NewSession())
+	sess := session.Must(session.NewSession(c))
 
 	svc := s3.New(sess)
 
