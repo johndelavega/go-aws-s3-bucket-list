@@ -12,13 +12,11 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
 )
 
-const _appVersion = "v0.0.1"
+const _appVersion = "v0.0.2"
 
 //
 // go run . mybucket
@@ -47,20 +45,26 @@ func main() {
 		return
 	}
 
-	c := &aws.Config{
-		// Either hard-code the region or use AWS_REGION.
-		// Region: aws.String("us-east-2"),
-		// Region: aws.String("us-west-2"), // Oregon
+	// // Either hard-code the region or use AWS_REGION.
+	// // Region: aws.String("us-east-2"),
+	// // Region: aws.String("us-west-2"), // Oregon
 
-		// credentials.NewEnvCredentials assumes two environment variables are
-		// present:
-		// 1. AWS_ACCESS_KEY_ID, and
-		// 2. AWS_SECRET_ACCESS_KEY.
-		Credentials: credentials.NewEnvCredentials(),
-	}
+	// // credentials.NewEnvCredentials assumes two environment variables are
+	// // present:
+	// // 1. AWS_ACCESS_KEY_ID, and
+	// // 2. AWS_SECRET_ACCESS_KEY.
+	// // or custom code that uses
+	// // AWS_SECURITY_CREDENTIALS_FILE = path to accessKeys.csv created by AWS console credential settings
 
-	// sess := session.Must(session.NewSession())
-	sess := session.Must(session.NewSession(c))
+	// c := &aws.Config{
+	// 	Credentials: credentials.NewEnvCredentials(),
+	// }
+	// sess := session.Must(session.NewSession(c))
+
+	// this will use:
+	// ~/.aws/credentials (Linux)
+	// %UserProfile%\.aws\credentials (Windows)
+	sess := session.Must(session.NewSession())
 
 	svc := s3.New(sess)
 
