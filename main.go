@@ -12,11 +12,13 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/aws/aws-sdk-go/aws"
+
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
 )
 
-const _appVersion = "v0.0.2"
+const _appVersion = "v0.0.3"
 
 //
 // go run . mybucket
@@ -61,10 +63,14 @@ func main() {
 	// }
 	// sess := session.Must(session.NewSession(c))
 
+	c := &aws.Config{
+		Region: aws.String("us-west-2"), // Oregon
+	}
+
 	// this will use:
 	// ~/.aws/credentials (Linux)
 	// %UserProfile%\.aws\credentials (Windows)
-	sess := session.Must(session.NewSession())
+	sess := session.Must(session.NewSession(c))
 
 	svc := s3.New(sess)
 
